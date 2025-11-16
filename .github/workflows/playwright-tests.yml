@@ -1,6 +1,7 @@
 name: Playwright Tests
 
 on:
+  workflow_dispatch:
   pull_request:
     branches: [ main ] # this can be changed to your default branch
 
