@@ -1,0 +1,57 @@
+name: Playwright Tests
+
+on:
+  pull_request:
+    branches: [ main ] # this can be changed to your default branch
+
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Start local app in background
+        run: npm start > server.log 2>&1 &
+
+      - name: Wait for app to be ready # wait up to 2 minutes for the app to start
+        run: |
+          for i in {1..60}; do
+            if curl -f http://localhost:4200 > /dev/null 2>&1; then
+              echo "App is ready!"
+              exit 0
+            fi
+            echo "Waiting for app... attempt $i/60"
+            sleep 2
+          done
+          echo "App failed to start"
+          cat server.log
+          exit 1
+
+      - name: Run Playwright tests
+        run: npm run test:playwright
+
+      - name: Upload Playwright Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
