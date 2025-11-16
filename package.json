@@ -7,6 +7,8 @@
 		"start": "ng serve",
 		"build": "ng build --prod",
 		"test": "ng test",
+		"test:playwright": "playwright test",
+		"test:playwright:ui": "playwright test --ui",
 		"lint": "ng lint"
 	},
 	"private": true,
@@ -23,13 +25,15 @@
 		"rxjs": "^7.8.1",
 		"rxjs-compat": "^6.5.5",
 		"tsify": "^5.0.4",
-		"zone.js": "0.13.0"
+		"zone.js": "0.13.0",
+		"playwright": "^1.37.0"
 	},
 	"devDependencies": {
 		"@angular-devkit/build-angular": "^16.0.0",
 		"@angular/cli": "^16.0.0",
 		"@angular/compiler-cli": "16.0.0",
 		"@angular/language-service": "16.0.0",
+		"@playwright/test": "^1.56.1",
 		"@types/jasmine": "^4.3.1",
 		"@types/jasminewd2": "^2.0.8",
 		"@types/node": "^20.1.0",
